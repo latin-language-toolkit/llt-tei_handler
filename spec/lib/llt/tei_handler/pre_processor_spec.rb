@@ -53,5 +53,24 @@ describe LLT::TeiHandler::PreProcessor do
 
       removed.should == ignored
     end
+
+    def with_stripped_lines(string)
+      string.lines.map(&:strip).join
+    end
+
+    it "takes out given nodes including all of their content" do
+      doc = pre_processor.new(tei_doc)
+      doc.ignore_nodes('teiHeader', 'head')
+      result = with_stripped_lines(<<-EOF)
+        <?xml version="1.0" encoding="utf-8"?>
+        <TEI xmlns="http://www.tei-c.org/ns/1.0">
+          <body>
+            <p>Text <ref type="note">Note</ref> resumed</p>
+          </body>
+        </TEI>
+      EOF
+
+      with_stripped_lines(doc.to_xml).should == result
+    end
   end
 end
