@@ -11,6 +11,11 @@ module LLT
       def is_tei?
         @document.root.name == 'TEI'
       end
+
+      def ignore_nodes(*nodes)
+      end
+
+      alias_method :remove_nodes, :ignore_nodes
     end
   end
 end
