@@ -1,7 +1,7 @@
 require 'spec_helper'
 
-describe Llt::TeiHandler do
+describe LLT::TeiHandler do
   it 'has a version number' do
-    expect(Llt::TeiHandler::VERSION).not_to be nil
+    expect(LLT::TeiHandler::VERSION).not_to be nil
   end
 end

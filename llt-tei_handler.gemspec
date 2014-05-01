@@ -5,11 +5,11 @@ require 'llt/tei_handler/version'
 
 Gem::Specification.new do |spec|
   spec.name          = "llt-tei_handler"
-  spec.version       = Llt::TeiHandler::VERSION
+  spec.version       = LLT::TeiHandler::VERSION
   spec.authors       = ["LFDM"]
   spec.email         = ["1986gh@gmail.com"]
   spec.summary       = %q{Leightweigth transformations of TEI Documents}
-  spec.description   = %q{TODO: Write a longer description. Optional.}
+  spec.description   = spec.summary
   spec.homepage      = ""
   spec.license       = "MIT"
 

@@ -1,6 +1,6 @@
 require "llt/tei_handler/version"
 
-module Llt
+module LLT
   module TeiHandler
     # Your code goes here...
   end

@@ -1,4 +1,4 @@
-# Llt::TeiHandler
+# LLT::TeiHandler
 
 [![Version](http://allthebadges.io/latin-language-toolkit/llt-tei_handler/badge_fury.png)](http://allthebadges.io/latin-language-toolkit/llt-tei_handler/badge_fury)
 [![Dependencies](http://allthebadges.io/latin-language-toolkit/llt-tei_handler/gemnasium.png)](http://allthebadges.io/latin-language-toolkit/llt-tei_handler/gemnasium)
