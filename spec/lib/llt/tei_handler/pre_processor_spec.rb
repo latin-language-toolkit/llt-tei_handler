@@ -27,4 +27,31 @@ describe LLT::TeiHandler::PreProcessor do
       expect { pre_processor.new(doc) }.to raise_error ArgumentError
     end
   end
+
+  let(:tei_doc) do
+    <<-EOF
+      <?xml version="1.0" encoding="utf-8"?>
+      <TEI xmlns="http://www.tei-c.org/ns/1.0">
+        <teiHeader>
+          <xxx/>
+        </teiHeader>
+        <body>
+          <head>TITLE</head>
+          <p>Text <ref type='note'>Note</ref> resumed</p>
+        </body>
+      </TEI>
+    EOF
+  end
+
+  describe "#ignore_nodes" do
+    it "has the alias remove_nodes" do
+      doc1 = pre_processor.new(tei_doc)
+      doc2 = pre_processor.new(tei_doc)
+
+      removed = doc1.remove_nodes('body').to_xml
+      ignored = doc2.ignore_nodes('body').to_xml
+
+      removed.should == ignored
+    end
+  end
 end
