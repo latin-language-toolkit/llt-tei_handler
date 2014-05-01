@@ -2,6 +2,6 @@ require "llt/tei_handler/version"
 
 module LLT
   module TeiHandler
-    # Your code goes here...
+    require 'llt/tei_handler/pre_processor'
   end
 end
