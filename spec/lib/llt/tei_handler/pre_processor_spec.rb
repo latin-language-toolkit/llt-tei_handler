@@ -23,8 +23,17 @@ describe LLT::TeiHandler::PreProcessor do
         <doc>
         </doc>
       EOF
-
       expect { pre_processor.new(doc) }.to raise_error ArgumentError
+    end
+
+    it "allows different TEI versions" do
+      doc = <<-EOF
+        <?xml version="1.0" encoding="utf-8"?>
+        <TEI.2 xmlns="http://www.tei-c.org/ns/1.0">
+        </TEI.2>
+      EOF
+      expect { pre_processor.new(doc) }.not_to raise_error
+
     end
   end
 

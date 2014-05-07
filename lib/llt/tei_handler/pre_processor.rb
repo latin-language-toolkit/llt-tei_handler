@@ -13,7 +13,7 @@ module LLT
       end
 
       def is_tei?
-        @document.root.name == 'TEI'
+        @document.root.name =~ /^TEI/
       end
 
       def ignore_nodes(*nodes)
