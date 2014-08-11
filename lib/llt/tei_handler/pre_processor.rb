@@ -17,6 +17,7 @@ module LLT
       end
 
       def ignore_nodes(*nodes)
+require 'pry'; binding.pry
         @document.search(*nodes).each(&:remove)
         @document
       end
