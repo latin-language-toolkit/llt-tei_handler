@@ -5,7 +5,7 @@ module LLT
 
       def initialize(document)
         @document = Nokogiri::XML(document)
-        raise ArgumentError.new('Document is no TEI XML') unless is_tei?
+        try_to_find_tei_root unless is_tei?
       end
 
       def to_xml
@@ -31,6 +31,15 @@ module LLT
           doc.sub(/^<\?xml version=.*\?>/, '')
         else
           doc
+        end
+      end
+
+      def try_to_find_tei_root
+        tei = @document.xpath('//*[name() = "TEI" or name() = "TEI.2"]').first
+        if tei
+          @document = tei
+        else
+          raise ArgumentError.new('Document is no TEI XML') unless is_tei?
         end
       end
     end

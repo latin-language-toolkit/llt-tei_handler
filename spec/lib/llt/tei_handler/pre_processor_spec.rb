@@ -17,6 +17,17 @@ describe LLT::TeiHandler::PreProcessor do
       expect { pre_processor.new(doc) }.not_to raise_error
     end
 
+    it "tries to find the TEI root element" do
+      doc = <<-EOF
+        <?xml version="1.0" encoding="utf-8"?>
+        <reply>
+          <TEI xmlns="http://www.tei-c.org/ns/1.0">
+          </TEI>
+        </reply>
+      EOF
+      expect { pre_processor.new(doc) }.not_to raise_error
+    end
+
     it "throws an error when the document is NOT TEI" do
       doc = <<-EOF
         <?xml version="1.0" encoding="utf-8"?>
