@@ -38,6 +38,7 @@ module LLT
         tei = @document.xpath('//*[name() = "TEI" or name() = "TEI.2"]').first
         if tei
           @document = Nokogiri::XML::Document.new
+          @document.encoding = "UTF-8"
           @document.root = tei
         else
           raise ArgumentError.new('Document is no TEI XML')
