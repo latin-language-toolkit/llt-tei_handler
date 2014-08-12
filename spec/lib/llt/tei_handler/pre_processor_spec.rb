@@ -22,6 +22,7 @@ describe LLT::TeiHandler::PreProcessor do
         <?xml version="1.0" encoding="utf-8"?>
         <reply>
           <TEI xmlns="http://www.tei-c.org/ns/1.0">
+            <teiHeader></teiHeader>
           </TEI>
         </reply>
       EOF

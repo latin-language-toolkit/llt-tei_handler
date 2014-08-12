@@ -17,7 +17,6 @@ module LLT
       end
 
       def ignore_nodes(*nodes)
-require 'pry'; binding.pry
         @document.search(*nodes).each(&:remove)
         @document
       end
@@ -38,9 +37,10 @@ require 'pry'; binding.pry
       def try_to_find_tei_root
         tei = @document.xpath('//*[name() = "TEI" or name() = "TEI.2"]').first
         if tei
-          @document = tei
+          @document = Nokogiri::XML::Document.new
+          @document.root = tei
         else
-          raise ArgumentError.new('Document is no TEI XML') unless is_tei?
+          raise ArgumentError.new('Document is no TEI XML')
         end
       end
     end
