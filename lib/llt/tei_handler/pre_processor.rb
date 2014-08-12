@@ -38,6 +38,12 @@ module LLT
         tei = @document.xpath('//*[name() = "TEI" or name() = "TEI.2"]').first
         if tei
           if RUBY_ENGINE == "jruby"
+            # Pretty unnecessarily reparses the document fragment, but
+            # nokogiri-java seems to have problems with handling namespaces
+            # when assigning the root node of a document by hand.
+            #
+            # The issue has been reported on the nokogiri-talk Google group
+            # and is described in detail there (currently awaiting approval)
             @document = Nokogiri::XML(tei.to_s)
           else
             @document = Nokogiri::XML::Document.new
