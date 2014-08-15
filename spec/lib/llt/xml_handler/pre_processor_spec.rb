@@ -101,5 +101,20 @@ describe LLT::XmlHandler::PreProcessor do
       doc.document.xpath('//teiHeader').should be_empty
       doc.document.xpath('//body').should be_empty
     end
+
+    it "honors a namespace given on initialization" do
+      ns =  "http://www.tei-c.org/ns/1.0"
+      doc1 = pre_processor.new(tei_doc,   ns: ns)
+      doc2 = pre_processor.new(doc_wo_ns, ns: ns)
+
+      doc1.document.xpath('//ns:teiHeader', ns: ns).should_not be_empty
+      doc2.document.xpath('//teiHeader').should_not be_empty
+
+      doc1.remove_nodes('teiHeader')
+      doc2.remove_nodes('teiHeader')
+
+      doc1.document.xpath('//ns:teiHeader', ns: ns).should be_empty
+      doc2.document.xpath('//teiHeader').should_not be_empty
+    end
   end
 end
