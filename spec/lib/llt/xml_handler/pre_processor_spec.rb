@@ -63,7 +63,13 @@ describe LLT::XmlHandler::PreProcessor do
     end
 
     it "root element can have a namespace, given as optional keyword param" do
+      doc = pre_processor.new(embedded_tei_doc, root: 'TEI', ns: "http://www.tei-c.org/ns/1.0")
+      doc.document.root.name.should == "TEI"
+    end
 
+    it "really honors the namespace - it has to be present when given" do
+      doc = pre_processor.new(embedded_tei_doc, root: 'TEI')
+      doc.document.root.name.should_not == "TEI"
     end
   end
 

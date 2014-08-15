@@ -5,8 +5,9 @@ module LLT
 
       attr_reader :document
 
-      def initialize(document, root: nil)
+      def initialize(document, root: nil, ns: nil)
         @document = Nokogiri::XML(document)
+        @namespace = ns
         go_to_root(root) if root
 
         @document.encoding = "UTF-8"
@@ -34,8 +35,12 @@ module LLT
         end
       end
 
+      def to_xpath(elem, ns)
+        ns ? ["//ns:#{elem}", ns: ns] : ["//#{elem}"]
+      end
+
       def go_to_root(root)
-        new_root = @document.xpath("//#{root}").first
+        new_root = @document.xpath(*to_xpath(root, @namespace)).first
         return unless new_root # or throw an error?
 
         if RUBY_ENGINE == "jruby"
