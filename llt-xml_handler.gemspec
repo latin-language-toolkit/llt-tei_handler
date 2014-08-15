@@ -1,14 +1,13 @@
 # coding: utf-8
 lib = File.expand_path('../lib', __FILE__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
-require 'llt/tei_handler/version'
-
+require 'llt/xml_handler/version' 
 Gem::Specification.new do |spec|
-  spec.name          = "llt-tei_handler"
-  spec.version       = LLT::TeiHandler::VERSION
+  spec.name          = "llt-xml_handler"
+  spec.version       = LLT::XmlHandler::VERSION
   spec.authors       = ["LFDM"]
   spec.email         = ["1986gh@gmail.com"]
-  spec.summary       = %q{Leightweigth transformations of TEI Documents}
+  spec.summary       = %q{Leightweigth transformations of XML Documents}
   spec.description   = spec.summary
   spec.homepage      = ""
   spec.license       = "MIT"

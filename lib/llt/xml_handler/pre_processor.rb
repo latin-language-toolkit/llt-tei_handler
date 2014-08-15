@@ -1,5 +1,5 @@
 module LLT
-  module TeiHandler
+  module XmlHandler
     class PreProcessor
       require 'nokogiri'
 

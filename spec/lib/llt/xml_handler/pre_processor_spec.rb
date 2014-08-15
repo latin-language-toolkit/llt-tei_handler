@@ -1,7 +1,7 @@
 require 'spec_helper'
 
-describe LLT::TeiHandler::PreProcessor do
-  let(:pre_processor) { LLT::TeiHandler::PreProcessor }
+describe LLT::XmlHandler::PreProcessor do
+  let(:pre_processor) { LLT::XmlHandler::PreProcessor }
 
   def load_fixture(filename)
     File.read(File.expand_path("../../../fixtures/#{filename}", __FILE__))
