@@ -39,6 +39,18 @@ describe LLT::XmlHandler::PreProcessor do
     EOF
   end
 
+  let(:doc_wo_ns) do
+    <<-EOF
+      <?xml version="1.0" encoding="utf-8"?>
+      <reply>
+        <custom_root>
+          <teiHeader></teiHeader>
+          <body></body>
+        </custom_root>
+      </reply>
+    EOF
+  end
+
   describe "#new" do
     it "takes a xml document on initialization" do
       doc = <<-EOF
@@ -50,15 +62,7 @@ describe LLT::XmlHandler::PreProcessor do
     end
 
     it "tries to find a root element, given as optional keyword param" do
-      doc = <<-EOF
-        <?xml version="1.0" encoding="utf-8"?>
-        <reply>
-          <custom_root>
-            <teiHeader></teiHeader>
-          </custom_root>
-        </reply>
-      EOF
-      doc = pre_processor.new(doc, root: 'custom_root')
+      doc = pre_processor.new(doc_wo_ns, root: 'custom_root')
       doc.document.root.name.should == 'custom_root'
     end
 
@@ -73,34 +77,29 @@ describe LLT::XmlHandler::PreProcessor do
     end
   end
 
-  describe "#ignore_nodes" do
-    it "has the alias remove_nodes" do
-      doc1 = pre_processor.new(tei_doc)
-      doc2 = pre_processor.new(tei_doc)
-
-      removed = doc1.remove_nodes('body').to_xml
-      ignored = doc2.ignore_nodes('body').to_xml
-
-      removed.should == ignored
-    end
-
+  describe "#remove_nodes" do
     def with_stripped_lines(string)
       string.lines.map(&:strip).join
     end
 
-    it "takes out given nodes including all of their content" do
-      doc = pre_processor.new(tei_doc)
-      doc.ignore_nodes('teiHeader', 'head')
-      result = with_stripped_lines(<<-EOF)
-        <?xml version="1.0" encoding="utf-8"?>
-        <TEI xmlns="http://www.tei-c.org/ns/1.0">
-          <body>
-            <p>Text <ref type="note">Note</ref> resumed</p>
-          </body>
-        </TEI>
-      EOF
+    it "takes out a given node including all of its content" do
+      doc = pre_processor.new(doc_wo_ns)
 
-      with_stripped_lines(doc.to_xml).should == result
+      doc.document.xpath('//teiHeader').should_not be_empty
+
+      doc.remove_nodes('teiHeader')
+      doc.document.xpath('//teiHeader').should be_empty
+    end
+
+    it "can remove several nodes at a single step" do
+      doc = pre_processor.new(doc_wo_ns)
+
+      doc.document.xpath('//teiHeader').should_not be_empty
+      doc.document.xpath('//body').should_not be_empty
+
+      doc.remove_nodes('teiHeader', 'body')
+      doc.document.xpath('//teiHeader').should be_empty
+      doc.document.xpath('//body').should be_empty
     end
   end
 end

@@ -17,12 +17,11 @@ module LLT
         without_duplicate_declaration(@document.to_xml).strip
       end
 
-      def ignore_nodes(*nodes)
-        @document.search(*nodes).each(&:remove)
-        @document
+      def remove_nodes(*nodes)
+        nodes.each do |node|
+          @document.xpath(*to_xpath(node, @namespace)).each(&:remove)
+        end
       end
-
-      alias_method :remove_nodes, :ignore_nodes
 
       private
 
