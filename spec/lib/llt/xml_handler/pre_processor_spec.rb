@@ -7,46 +7,21 @@ describe LLT::XmlHandler::PreProcessor do
     File.read(File.expand_path("../../../fixtures/#{filename}", __FILE__))
   end
 
-  describe "#new" do
-    it "takes a TEI xml document on initialization" do
-      doc = <<-EOF
-        <?xml version="1.0" encoding="utf-8"?>
+  let(:embedded_tei_doc) do
+    <<-EOF
+      <?xml version="1.0" encoding="utf-8"?>
+      <reply>
         <TEI xmlns="http://www.tei-c.org/ns/1.0">
+          <teiHeader>
+            <xxx/>
+          </teiHeader>
+          <body>
+            <head>TITLE</head>
+            <p>Text <ref type='note'>Note</ref> resumed</p>
+          </body>
         </TEI>
-      EOF
-      expect { pre_processor.new(doc) }.not_to raise_error
-    end
-
-    it "tries to find the TEI root element" do
-      doc = <<-EOF
-        <?xml version="1.0" encoding="utf-8"?>
-        <reply>
-          <TEI xmlns="http://www.tei-c.org/ns/1.0">
-            <teiHeader></teiHeader>
-          </TEI>
-        </reply>
-      EOF
-      expect { pre_processor.new(doc) }.not_to raise_error
-    end
-
-    it "throws an error when the document is NOT TEI" do
-      doc = <<-EOF
-        <?xml version="1.0" encoding="utf-8"?>
-        <doc>
-        </doc>
-      EOF
-      expect { pre_processor.new(doc) }.to raise_error ArgumentError
-    end
-
-    it "allows different TEI versions" do
-      doc = <<-EOF
-        <?xml version="1.0" encoding="utf-8"?>
-        <TEI.2 xmlns="http://www.tei-c.org/ns/1.0">
-        </TEI.2>
-      EOF
-      expect { pre_processor.new(doc) }.not_to raise_error
-
-    end
+      </reply
+    EOF
   end
 
   let(:tei_doc) do
@@ -62,6 +37,34 @@ describe LLT::XmlHandler::PreProcessor do
         </body>
       </TEI>
     EOF
+  end
+
+  describe "#new" do
+    it "takes a xml document on initialization" do
+      doc = <<-EOF
+        <?xml version="1.0" encoding="utf-8"?>
+        <TEI xmlns="http://www.tei-c.org/ns/1.0">
+        </TEI>
+      EOF
+      expect { pre_processor.new(doc) }.not_to raise_error
+    end
+
+    it "tries to find a root element, given as optional keyword param" do
+      doc = <<-EOF
+        <?xml version="1.0" encoding="utf-8"?>
+        <reply>
+          <custom_root>
+            <teiHeader></teiHeader>
+          </custom_root>
+        </reply>
+      EOF
+      doc = pre_processor.new(doc, root: 'custom_root')
+      doc.document.root.name.should == 'custom_root'
+    end
+
+    it "root element can have a namespace, given as optional keyword param" do
+
+    end
   end
 
   describe "#ignore_nodes" do

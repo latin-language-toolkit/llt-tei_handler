@@ -3,17 +3,17 @@ module LLT
     class PreProcessor
       require 'nokogiri'
 
-      def initialize(document)
+      attr_reader :document
+
+      def initialize(document, root: nil)
         @document = Nokogiri::XML(document)
-        try_to_find_tei_root unless is_tei?
+        go_to_root(root) if root
+
+        @document.encoding = "UTF-8"
       end
 
       def to_xml
         without_duplicate_declaration(@document.to_xml).strip
-      end
-
-      def is_tei?
-        @document.root.name =~ /^TEI/
       end
 
       def ignore_nodes(*nodes)
@@ -34,24 +34,21 @@ module LLT
         end
       end
 
-      def try_to_find_tei_root
-        tei = @document.xpath('//*[name() = "TEI" or name() = "TEI.2"]').first
-        if tei
-          if RUBY_ENGINE == "jruby"
-            # Pretty unnecessarily reparses the document fragment, but
-            # nokogiri-java seems to have problems with handling namespaces
-            # when assigning the root node of a document by hand.
-            #
-            # The issue has been reported on the nokogiri-talk Google group
-            # and is described in detail there (currently awaiting approval)
-            @document = Nokogiri::XML(tei.to_s)
-          else
-            @document = Nokogiri::XML::Document.new
-            @document.root = tei
-          end
-          @document.encoding = "UTF-8"
+      def go_to_root(root)
+        new_root = @document.xpath("//#{root}").first
+        return unless new_root # or throw an error?
+
+        if RUBY_ENGINE == "jruby"
+          # Pretty unnecessarily reparses the document fragment, but
+          # nokogiri-java seems to have problems with handling namespaces
+          # when assigning the root node of a document by hand.
+          #
+          # The issue has been reported on the nokogiri-talk Google group
+          # and is described in detail there (currently awaiting approval)
+          @document = Nokogiri::XML(new_root.to_s)
         else
-          raise ArgumentError.new('Document is no TEI XML')
+          @document = Nokogiri::XML::Document.new
+          @document.root = new_root
         end
       end
     end
