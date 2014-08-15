@@ -39,6 +39,23 @@ describe LLT::XmlHandler::PreProcessor do
     EOF
   end
 
+  let(:prefixed_tei_doc) do
+    <<-EOF
+      <?xml version="1.0" encoding="utf-8"?>
+      <reply xmlns:tei="http://www.tei-c.org/ns/1.0">
+        <tei:TEI>
+          <tei:teiHeader>
+            <xxx/>
+          </tei:teiHeader>
+          <tei:body>
+            <tei:head>TITLE</head>
+            <tei:p>Text <tei:ref type='note'>Note</tei:ref> resumed</tei:p>
+          </tei:body>
+        </tei:TEI>
+      </tei:reply
+    EOF
+  end
+
   let(:doc_wo_ns) do
     <<-EOF
       <?xml version="1.0" encoding="utf-8"?>
@@ -74,6 +91,11 @@ describe LLT::XmlHandler::PreProcessor do
     it "really honors the namespace - it has to be present when given" do
       doc = pre_processor.new(embedded_tei_doc, root: 'TEI')
       doc.document.root.name.should_not == "TEI"
+    end
+
+    it "also works with prefixes" do
+      doc = pre_processor.new(prefixed_tei_doc, root: 'TEI', ns: "http://www.tei-c.org/ns/1.0")
+      doc.document.root.name.should == "TEI"
     end
   end
 
@@ -115,6 +137,16 @@ describe LLT::XmlHandler::PreProcessor do
 
       doc1.document.xpath('//ns:teiHeader', ns: ns).should be_empty
       doc2.document.xpath('//teiHeader').should_not be_empty
+    end
+
+    it "also works with prefixes" do
+      ns =  "http://www.tei-c.org/ns/1.0"
+      doc = pre_processor.new(prefixed_tei_doc,   ns: ns)
+
+      doc.document.xpath('//ns:teiHeader', ns: ns).should_not be_empty
+
+      doc.remove_nodes('teiHeader')
+      doc.document.xpath('//ns:teiHeader', ns: ns).should be_empty
     end
   end
 end
