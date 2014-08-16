@@ -50,6 +50,8 @@ module LLT
           # The issue has been reported on the nokogiri-talk Google group
           # and is described in detail there (currently awaiting approval)
           @document = Nokogiri::XML(new_root.to_s)
+          root_ns = new_root.namespace
+          @document.root.add_namespace(root_ns.prefix, root_ns.href) if root_ns
         else
           @document = Nokogiri::XML::Document.new
           @document.root = new_root

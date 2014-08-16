@@ -97,6 +97,13 @@ describe LLT::XmlHandler::PreProcessor do
       doc = pre_processor.new(prefixed_tei_doc, root: 'TEI', ns: "http://www.tei-c.org/ns/1.0")
       doc.document.root.name.should == "TEI"
     end
+
+    it "does not destroy namespace definition (a jruby problem)" do
+      doc = pre_processor.new(prefixed_tei_doc, root: 'TEI', ns: "http://www.tei-c.org/ns/1.0")
+      ns = doc.document.root.namespace
+      ns.prefix.should == 'tei'
+      ns.href.should == "http://www.tei-c.org/ns/1.0"
+    end
   end
 
   describe "#remove_nodes" do
