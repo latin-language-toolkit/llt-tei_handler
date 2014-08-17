@@ -13,7 +13,7 @@ SimpleCov.start do
 end
 
 $LOAD_PATH.unshift File.expand_path('../../lib', __FILE__)
-require 'llt/tei_handler'
+require 'llt/xml_handler'
 
 RSpec.configure do |config|
   config.treat_symbols_as_metadata_keys_with_true_values = true
