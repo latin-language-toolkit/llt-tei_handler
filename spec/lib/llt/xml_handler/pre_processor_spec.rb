@@ -148,8 +148,25 @@ describe LLT::XmlHandler::PreProcessor do
 
     it "also works with prefixes" do
       ns =  "http://www.tei-c.org/ns/1.0"
-      doc = pre_processor.new(prefixed_tei_doc,   ns: ns)
+      doc = pre_processor.new(prefixed_tei_doc, ns: ns)
 
+      doc.document.xpath('//ns:teiHeader', ns: ns).should_not be_empty
+
+      doc.remove_nodes('teiHeader')
+      doc.document.xpath('//ns:teiHeader', ns: ns).should be_empty
+    end
+
+    it "also works with prefixes II" do
+      ns  = "http://www.tei-c.org/ns/1.0"
+      xml = <<-EOF
+        <reply xmlns:tei="#{ns}">
+          <tei:TEI>
+            <tei:teiHeader/>
+            <tei:body/>
+          </tei>
+        </reply>
+      EOF
+      doc = pre_processor.new(xml, root: 'TEI', ns: ns)
       doc.document.xpath('//ns:teiHeader', ns: ns).should_not be_empty
 
       doc.remove_nodes('teiHeader')

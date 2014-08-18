@@ -49,9 +49,21 @@ module LLT
           #
           # The issue has been reported on the nokogiri-talk Google group
           # and is described in detail there (currently awaiting approval)
-          @document = Nokogiri::XML(new_root.to_s)
+          #
+          # A second issue leads to the weid dance of the next four lines.
+          # The new_root element doesn't have a namespace definition at this
+          # point anymore. It still has its namespace though, which is the
+          # same as the namespace definition that we would want.
+          #
+          # Because it's the same it cannot be added as a definition. We
+          # delete the namespace, set the definition by hand - and then
+          # have to set the namespace again, otherwise the element would
+          # be without it... Very weird.
           root_ns = new_root.namespace
-          @document.root.add_namespace(root_ns.prefix, root_ns.href) if root_ns
+          new_root.namespace = nil
+          new_root.add_namespace_definition(root_ns.prefix, root_ns.href) if root_ns
+          new_root.namespace = root_ns
+          @document = Nokogiri::XML(new_root.to_s)
         else
           @document = Nokogiri::XML::Document.new
           @document.root = new_root
